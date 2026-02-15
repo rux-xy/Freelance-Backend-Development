@@ -1,14 +1,25 @@
-# Use an official OpenJDK 21 image
-FROM eclipse-temurin:21-jdk-jammy
-  
-  # Set working directory inside the container
+# Use Maven + JDK image to build the app
+FROM maven:3.9.0-eclipse-temurin-21 AS build
+
 WORKDIR /app
-  
-  # Copy Maven build files
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
-  
-  # Expose the port your Spring Boot app runs on
+
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
+
+# Build the JAR
+RUN mvn clean package -DskipTests
+
+# Use lightweight JDK image for running
+FROM eclipse-temurin:21-jdk-jammy
+
+WORKDIR /app
+
+# Copy the built JAR from previous stage
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose port
 EXPOSE 9090
-  
-  # Run the jar
+
+# Run
 ENTRYPOINT ["java","-jar","app.jar"]
