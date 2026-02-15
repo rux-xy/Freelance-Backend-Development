@@ -7,6 +7,7 @@ import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,16 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    @Value("${spring.mongodb.uri}")
+    private String mongoUri;
+
+    @PostMapping("/testMongo")
+    public String testMongo() {
+        System.out.println("Mongo URI being used: " + mongoUri);
+        return "Check console!";
+    }
+
+
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request){
         User user = new User();
@@ -34,6 +45,7 @@ public class AuthController {
         userRepository.save(user);
         return "User registered successfully";
     }
+
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request){

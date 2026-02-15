@@ -1,0 +1,7 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./target/demo-0.0.1-SNAPSHOT.jar:/app/app.jar
