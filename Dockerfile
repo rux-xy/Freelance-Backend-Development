@@ -1,5 +1,5 @@
 # Use Maven + JDK image to build the app
-FROM maven:3.9.0-eclipse-temurin-21 AS build
+FROM maven:3.9.0-jdk-21 AS build
 
 WORKDIR /app
 
