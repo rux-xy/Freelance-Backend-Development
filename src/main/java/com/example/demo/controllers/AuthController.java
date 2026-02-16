@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -41,18 +38,16 @@ public class AuthController {
         return "Check console!";
     }
 
-
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request){
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole("PENDING");
         userRepository.save(user);
         return "User registered successfully";
     }
-
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request){
@@ -71,9 +66,6 @@ public class AuthController {
 
     @PostMapping("/google")
     public AuthResponse googleAuth(@RequestBody GoogleAuthRequest request) throws Exception {
-        System.out.println("Backend Google Client ID: " + googleClientId);
-        System.out.println("Received token: " + request.getToken());
-
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new NetHttpTransport(),
@@ -100,12 +92,20 @@ public class AuthController {
             user.setEmail(email);
             user.setName(name);
             user.setPassword(""); // no password for Google users
-            user.setRole("USER");
+            user.setRole("PENDING");
             userRepository.save(user);
         }
 
         String jwt = jwtUtil.generateToken(user.getEmail());
         return new AuthResponse(jwt);
+    }
+
+    @GetMapping("/me") //Gets user object
+    public User getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtil.extractUserId(token);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 
