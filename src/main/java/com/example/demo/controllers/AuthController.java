@@ -71,6 +71,9 @@ public class AuthController {
 
     @PostMapping("/google")
     public AuthResponse googleAuth(@RequestBody GoogleAuthRequest request) throws Exception {
+        System.out.println("Backend Google Client ID: " + googleClientId);
+        System.out.println("Received token: " + request.getToken());
+
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new NetHttpTransport(),
