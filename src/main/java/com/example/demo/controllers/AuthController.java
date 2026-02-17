@@ -144,5 +144,10 @@ public class AuthController {
         return ResponseEntity.ok(user).getBody();
     }
 
+    @GetMapping("/keepalive")
+    public String keepAlive(){
+        return "Breathing";
+    }
+
 
 }
