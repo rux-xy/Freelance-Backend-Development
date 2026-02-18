@@ -17,9 +17,11 @@ public class Contract {
     private String clientId;
     private String freelancerId;
     private String proposalId;
-    private Double agreedAmount;
+    private Double agreedPrice;
+
     // ACTIVE, COMPLETED, CANCELLED
     private String status;
-
-    private Instant createdAt = Instant.now();
+    private String paymentStatus = "unpaid";
+    private String startedAt;
+    private String completedAt;
 }

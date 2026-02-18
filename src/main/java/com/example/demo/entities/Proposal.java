@@ -16,9 +16,11 @@ public class Proposal {
 
     private String jobId; // reference to Job.id
     private String freelancerId; // reference to User.id (FREELANCER)
-
+    private String freelancerName;
     private String coverLetter;
-    private Double amount;
+    private Double bidAmount;
+    private Integer estimatedDays;
     private String status;
-    private String createdAt;
+    private String submittedAt;
+    private String updatedAt;
 }

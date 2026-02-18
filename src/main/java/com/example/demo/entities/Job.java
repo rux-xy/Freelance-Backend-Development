@@ -19,11 +19,14 @@ public class Job {
 
     @Indexed
     private String clientId; // reference to User.id (CLIENT)
-
+    private String createdByName;
     private String title;
     private String description;
     private Double budget;
-
     private String category;
+    private List<String> skills = new ArrayList<>();
+    private String status = "open";
+    private boolean flagged = false;
     private String createdAt;
+    private String updatedAt;
 }

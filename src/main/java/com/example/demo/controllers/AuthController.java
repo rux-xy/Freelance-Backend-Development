@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.AuthResponse;
-import com.example.demo.dtos.GoogleAuthRequest;
-import com.example.demo.dtos.LoginRequest;
-import com.example.demo.dtos.RegisterRequest;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.JwtUtil;
@@ -22,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,6 +29,9 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private UserResponse toResponse(User user) {
+        return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getBio());
+    }
 
     @Value("${spring.mongodb.uri}")
     private String mongoUri;
@@ -61,7 +62,7 @@ public class AuthController {
         String token = jwtUtil.generateToken(user.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(token, user, "User registered successfully"));
+                .body(new AuthResponse(token, toResponse(user), "User registered successfully"));
     }
 
 
@@ -86,7 +87,7 @@ public class AuthController {
         String jwtToken = jwtUtil.generateToken(user.getEmail());
 
         return ResponseEntity.ok(
-                new AuthResponse(jwtToken, user, "Login successful")
+                new AuthResponse(jwtToken, toResponse(user), "Login successful")
         );
     }
 
@@ -129,19 +130,31 @@ public class AuthController {
         String jwtToken = jwtUtil.generateToken(user.getEmail());
 
         return ResponseEntity.ok(
-                new AuthResponse(jwtToken, user, "Google login successful")
+                new AuthResponse(jwtToken, toResponse(user), "Google login successful")
         );
     }
 
 
     @GetMapping("/me") //Gets user object
-    public User getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+    public UserResponse getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String email = jwtUtil.extractUserId(token);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(user).getBody();
+        return toResponse(user);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<UserResponse> updateProfile(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Map<String, String> body) {
+        String email = jwtUtil.extractUserId(authHeader.replace("Bearer ", ""));
+        User user = userRepository.findByEmail(email).orElseThrow();
+        if (body.containsKey("name")) user.setName(body.get("name"));
+        if (body.containsKey("bio")) user.setBio(body.get("bio"));
+        userRepository.save(user);
+        return ResponseEntity.ok(toResponse(user));
     }
 
     @GetMapping("/keepalive")

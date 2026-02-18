@@ -7,8 +7,11 @@ public class ProposalResponse {
     private String id;
     private String jobId;
     private String freelancerId;
-    private Double amount;
+    private String freelancerName;
     private String coverLetter;
+    private Double bidAmount;
+    private Integer estimatedDays;
     private String status;
-    private String createdAt;
+    private String submittedAt;
+    private String updatedAt;
 }

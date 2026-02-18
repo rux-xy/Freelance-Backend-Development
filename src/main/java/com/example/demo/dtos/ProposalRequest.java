@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ProposalRequest {
     private String jobId;
-    private Double amount;
+    private Double bidAmount;
     private String coverLetter;
+    private Integer estimatedDays;
 }
