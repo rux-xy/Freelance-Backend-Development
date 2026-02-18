@@ -14,4 +14,6 @@ public class User {
     private String password;
     private String role;
     private String bio;
+    private String createdAt;
+    private String updatedAt;
 }

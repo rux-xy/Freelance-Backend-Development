@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 
@@ -56,6 +57,8 @@ public class AuthController {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("PENDING");
+        user.setCreatedAt(Instant.now().toString());
+        user.setUpdatedAt(Instant.now().toString());
 
         userRepository.save(user);
 
@@ -124,6 +127,8 @@ public class AuthController {
             user.setName(name);
             user.setPassword(""); // Google users don't use password
             user.setRole("PENDING");
+            user.setCreatedAt(Instant.now().toString());
+            user.setUpdatedAt(Instant.now().toString());
             userRepository.save(user);
         }
 
