@@ -56,7 +56,7 @@ public class AuthController {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole("PENDING");
+        user.setRole(request.getRole()!=null? request.getRole().toUpperCase() : "PENDING");
         user.setCreatedAt(Instant.now().toString());
         user.setUpdatedAt(Instant.now().toString());
 
