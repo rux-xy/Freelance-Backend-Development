@@ -58,4 +58,9 @@ public class ContractController {
         contract.setPaymentStatus(paymentStatus);
         return contractRepository.save(contract);
     }
+
+    @GetMapping("/all")
+    public List<Contract> getAllContracts() {
+        return contractRepository.findAll();
+    }
 }

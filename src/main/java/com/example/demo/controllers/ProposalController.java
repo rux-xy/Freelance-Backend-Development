@@ -164,4 +164,9 @@ public class ProposalController {
 
         return savedContract;
     }
+
+    @GetMapping("/all")
+    public List<Proposal> getAllProposals() {
+        return proposalRepository.findAll();
+    }
 }
