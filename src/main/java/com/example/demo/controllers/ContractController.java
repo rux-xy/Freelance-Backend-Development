@@ -31,7 +31,7 @@ public class ContractController {
     public List<Contract> getMyContracts(@RequestHeader("Authorization") String authHeader) {
         String email = jwtUtil.extractUserId(authHeader.substring(7));
         User user = userRepository.findByEmail(email).orElseThrow();
-        if ("client".equals(user.getRole())) {
+        if ("CLIENT".equals(user.getRole())) {
             return contractRepository.findByClientId(user.getId());
         } else {
             return contractRepository.findByFreelancerId(user.getId());
