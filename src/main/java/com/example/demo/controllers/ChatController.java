@@ -10,6 +10,7 @@ import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -30,7 +31,7 @@ public class ChatController {
     @GetMapping("/threads")
     public List<ChatThread> getMyThreads(
             @RequestHeader("Authorization") String authHeader) {
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
         // Returns threads where user is either the client or freelancer
         return chatThreadRepository
@@ -85,7 +86,7 @@ public class ChatController {
             @PathVariable String id,
             @RequestBody Map<String, String> body) {
 
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User sender = userRepository.findByEmail(email).orElseThrow();
 
         ChatThread thread = chatThreadRepository.findById(id)
@@ -115,7 +116,7 @@ public class ChatController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable String id) {
 
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
 
         List<Message> messages = messageRepository
@@ -136,7 +137,7 @@ public class ChatController {
     public ResponseEntity<Map<String, Integer>> getUnreadCount(
             @RequestHeader("Authorization") String authHeader) {
 
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
 
         List<ChatThread> threads = chatThreadRepository

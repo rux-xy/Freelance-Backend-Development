@@ -6,6 +6,7 @@ import com.example.demo.repositories.ContractRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -29,7 +30,7 @@ public class ContractController {
 
     @GetMapping("/my")
     public List<Contract> getMyContracts(@RequestHeader("Authorization") String authHeader) {
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
         if ("CLIENT".equals(user.getRole())) {
             return contractRepository.findByClientId(user.getId());

@@ -7,6 +7,7 @@ import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class NotificationController {
     @GetMapping
     public List<Notification> getMyNotifications(
             @RequestHeader("Authorization") String authHeader) {
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
     }
@@ -42,7 +43,7 @@ public class NotificationController {
     @PostMapping("/read-all")
     public ResponseEntity<Void> markAllAsRead(
             @RequestHeader("Authorization") String authHeader) {
-        String email = jwtUtil.extractUserId(authHeader.substring(7));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
 
         List<Notification> all = notificationRepository
