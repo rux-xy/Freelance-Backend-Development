@@ -63,6 +63,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/users/*/role").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/users/seed-admin").permitAll()
+                .requestMatchers("/api/seed").permitAll()
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
