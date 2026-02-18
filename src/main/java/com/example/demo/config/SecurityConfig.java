@@ -57,15 +57,16 @@ public class SecurityConfig {
                 .cors(cors ->{}) //handling Cross Origin Issues (allowing access)
                 .csrf(csrf->csrf.disable())
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth->auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/jobs", "/api/jobs/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/users/*/role").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/users/seed-admin").permitAll()
-                .requestMatchers("/api/seed").permitAll()
-                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/jobs", "/api/jobs/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/seed-admin").permitAll()
+                        .requestMatchers("/api/seed").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/role").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

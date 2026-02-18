@@ -162,6 +162,22 @@ public class AuthController {
         return ResponseEntity.ok(toResponse(user));
     }
 
+    @PatchMapping("/update-role")
+    public ResponseEntity<UserResponse> updateRole(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Map<String, String> body) {
+        String email = jwtUtil.extractUserId(authHeader.replace("Bearer ", ""));
+        String newRole = body.get("role");
+        if (!"CLIENT".equals(newRole) && !"FREELANCER".equals(newRole)) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setRole(newRole);
+        userRepository.save(user);
+        return ResponseEntity.ok(toResponse(user));
+    }
+
     @GetMapping("/keepalive")
     public String keepAlive(){
         return "Breathing";

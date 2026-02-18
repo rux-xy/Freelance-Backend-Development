@@ -59,8 +59,8 @@ public class UserController {
         }
         User admin = new User();
         admin.setName("Admin");
-        admin.setEmail("admin@freelance.com");
-        admin.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin123"));
+        admin.setEmail("admin@freelancehub.com");
+        admin.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin@123"));
         admin.setRole("ADMIN");
         userRepository.save(admin);
         return ResponseEntity.ok("Admin created");
