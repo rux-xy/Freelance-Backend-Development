@@ -75,7 +75,7 @@ public class ProposalController {
                 "proposal_submitted",
                 "New Proposal Received",
                 freelancer.getName() + " submitted a proposal for your job",
-                savedProposal.getId()
+                job.getId()
         );
 
         return mapToResponse(savedProposal);
