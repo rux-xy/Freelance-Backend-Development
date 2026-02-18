@@ -28,6 +28,7 @@ public class JobController {
 
         User user = userRepository.findByEmail(email).orElseThrow();
         jobRequest.setClientId(user.getId());
+        jobRequest.setCreatedBy(user.getId());
         jobRequest.setCreatedByName(user.getName());   // ADD
         jobRequest.setStatus("open");
         jobRequest.setCreatedAt(Instant.now().toString());

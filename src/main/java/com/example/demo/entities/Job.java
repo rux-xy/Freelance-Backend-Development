@@ -20,6 +20,7 @@ public class Job {
     @Indexed
     private String clientId; // reference to User.id (CLIENT)
     private String createdByName;
+    private String createdBy;
     private String title;
     private String description;
     private Double budget;
