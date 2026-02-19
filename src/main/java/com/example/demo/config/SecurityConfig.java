@@ -88,9 +88,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedOrigins(List.of("https://uni-freelancer.vercel.app"));
-        configuration.setAllowedOrigins(List.of("https://uni-freelancer-six.vercel.app"));
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "https://uni-freelancer.vercel.app",
+                "https://uni-freelancer-six.vercel.app"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
